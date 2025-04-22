@@ -61,6 +61,18 @@ You’ll get:
 
 ---
 
+## 📜 License Information
+
+This project is licensed under a **paid commercial license**.
+
+- **Personal Use**: You may use this code for personal, non-commercial projects.
+- **Commercial Use**: A paid license is required for commercial use. To obtain a commercial license, please visit [Gumroad Link](#) for further details and purchasing options.
+- **Attribution**: If used commercially, attribution is required as per the license agreement.
+
+For full license details, please refer to the [TECHWITHEMMA-LICENSE.md](https://github.com/TechWithEmmaYT/AI-Job-Assistant-Saas-Platform/blob/main/TECHWITHEMMA-LICENSE.md).
+
+---
+
 ## 📺 Subscribe for More Projects
 
 If you find this helpful, support by subscribing and sharing:
