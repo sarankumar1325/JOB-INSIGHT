@@ -41,13 +41,13 @@ If you love this project and want to support educational tech content:
 
 ---
 
-### 💻 Step 2: Run It Locally with Full Guide
+### 💻 Step 2: Run It Locally, Live Preview & Deploy with Full Instructions
 
-> Want to run this project on your own machine?
+> Want to run this project on your own machine and deploy it? We've got you covered with screenshots to guide you through every step!
 
-🔐 Access the **full PDF setup guide + live preview demo link** via Gumroad:
+🔐 Access the **full PDF setup guide + live preview demo link + deployment guide** via Gumroad:
 
-👉 [https://your-gumroad-link.com](https://your-gumroad-link.com) _(Instant access, no fluff)_
+👉 [https://techwithemma.gumroad.com/l/jfgek](https://techwithemma.gumroad.com/l/jfgek) _(🙏 Support our work to give free content)_
 
 You’ll get:
 
