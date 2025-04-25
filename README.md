@@ -22,7 +22,7 @@ If you love this project and want to support educational tech content:
 - 📝 **Add & Manage Job Descriptions**
 - 💬 **Real-Time Chat with AI**
 - 💳 **Credit-Based System for Usage**
-- 🤖 **AI Prompting & Insights**
+- 🤖 **AI Prompting & Insights (Gemini AI)**
 - 💸 **Payments via PayPal**
 - 🌐 **Built with Next.js 15**
 - 🎨 **Styled with Tailwind CSS & Shadcn UI**
