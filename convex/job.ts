@@ -1,4 +1,3 @@
-import { CREDIT_COST, FREE_TIER_CREDITS } from "@/lib/api-limits";
 import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { JobStatus } from "@/lib/constants";
@@ -11,33 +10,6 @@ export const createJob = mutation({
     jobDescription: v.string(),
   },
   handler: async (ctx, args) => {
-    let apiLimits = await ctx.db
-      .query("apiLimits")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .unique();
-
-    if (!apiLimits) {
-      const newLimitsId = await ctx.db.insert("apiLimits", {
-        userId: args.userId,
-        credits: FREE_TIER_CREDITS,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
-      apiLimits = await ctx.db.get(newLimitsId);
-    }
-
-    if (!apiLimits) {
-      throw new ConvexError("Failed to initialize your account");
-    }
-
-    if (apiLimits.credits < CREDIT_COST.JOB_CREATION) {
-      return {
-        data: null,
-        message: "You have run out of credits. Buy more to continue.",
-        requiresUpgrade: true,
-      };
-    }
-
     const jobId = await ctx.db.insert("jobs", {
       userId: args.userId,
       jobTitle: "Untitled",
@@ -47,12 +19,6 @@ export const createJob = mutation({
       status: JobStatus.PROCESSING,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-    });
-
-    // Deduct credit after successful job creation
-    await ctx.runMutation(api.apiLimit.deductCredit, {
-      userId: args.userId,
-      credit: CREDIT_COST.JOB_CREATION,
     });
 
     // AI processing

@@ -11,82 +11,58 @@ import {
 } from "@/components/ui/sidebar";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import JobSidebarList from "./JobSidebarList";
-import SignInPrompt from "./SignInPrompt";
 import SidebarFooterContent from "./SidebarFooterContent";
-import { useAuth, useUser } from "@clerk/nextjs";
-import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import Logo from "@/components/Logo";
+import { useSupabase } from "@/components/SupabaseProvider";
 
 const AppSidebar = () => {
-  const { isSignedIn, user, isLoaded } = useUser();
-  const { signOut } = useAuth();
-  const { openModal } = useUpgradeModal();
-  const userId = user?.id || null;
-
-  const apiLimits = useQuery(api.apiLimit.getUserCredits, {
-    userId: user?.id || "",
-  });
-
-  const loadingCredit = apiLimits === undefined;
-  const credits = apiLimits?.credits !== undefined ? apiLimits?.credits : 0;
+  const { user, isLoading } = useSupabase();
+  const userId = user?.id || "demo-user";
 
   return (
     <>
-      <Sidebar className="!bg-[rgb(33,33,33)] px-2">
+      <Sidebar className="!bg-brand-900 px-3 shadow-xl border-r border-brand-800/30">
         <SidebarHeader
           className="flex flex-row w-full items-center
-                    justify-between m-[4px_0px_0px]
+                    justify-between py-4 px-2
                     "
         >
-          <Link href="/" className="text-white text-xl">
-            Job<b className="text-primary">Assistant</b>.ai
-          </Link>
-          <SidebarTrigger className="!text-white !p-0 !bg-gray-800" />
+          <Logo className="text-white" />
+          <SidebarTrigger className="!text-white !p-2 !bg-brand-800/50 hover:!bg-brand-800 transition-colors rounded-lg" />
         </SidebarHeader>
-        <SidebarContent className="overflow-hidden">
+        <SidebarContent className="overflow-hidden py-2">
           <SidebarGroup>
             <SidebarGroupContent>
               <Link href="/">
                 <Button
                   variant="outline"
                   className="w-full 
-            !bg-transparent !text-white
-            border-[rgba(255,255,255,.2)]
-            mt-3 !h-10 !rounded-lg !font-medium text-sm
-            hover:!bg-gray-700 transition-colors
-            "
+                  !bg-brand-800/20 !text-white
+                  border-brand-700/30
+                  mt-1 !h-11 !rounded-lg !font-medium 
+                  hover:!bg-brand-800/40 transition-all
+                  hover:border-brand-700/50 hover-lift
+                  "
                 >
-                  <PlusIcon className="w-4 h-4" />
-                  <span>New Job</span>
+                  <Plus className="w-4 h-4 mr-2" />
+                  <span>New Job Analysis</span>
                 </Button>
               </Link>
             </SidebarGroupContent>
           </SidebarGroup>
 
           {/* {Job List} */}
-          {userId && <JobSidebarList {...{ userId }} />}
-
-          {/* {Sign In Prompt} */}
-          {!isSignedIn && isLoaded ? <SignInPrompt /> : null}
+          <JobSidebarList userId={userId} />
         </SidebarContent>
         <SidebarFooter>
           <SidebarFooterContent
-            isSignedIn={isSignedIn || false}
-            isLoaded={isLoaded}
-            userName={user?.fullName!}
-            emailAddress={user?.primaryEmailAddress?.emailAddress!}
-            userInitial={user?.firstName?.charAt(0) || ""}
-            credits={credits}
-            loadingCredit={loadingCredit}
-            onUpgradeClick={openModal}
-            onSignOut={() =>
-              signOut({
-                redirectUrl: "/",
-              })
-            }
+            isSignedIn={!!user}
+            isLoaded={!isLoading}
+            userName={user?.name || "Demo User"}
+            emailAddress={user?.email || "demo@example.com"}
+            userInitial={(user?.name?.[0] || "D").toUpperCase()}
           />
         </SidebarFooter>
       </Sidebar>

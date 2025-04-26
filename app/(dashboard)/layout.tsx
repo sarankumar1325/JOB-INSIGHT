@@ -1,7 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "./_components/AppSidebar";
-import SignInModal from "@/components/SigninModal";
-import UpgradeModal from "@/components/UpgradeModal";
 
 export default async function DashboardLayout({
   children,
@@ -9,22 +7,16 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 text-foreground">
       <SidebarProvider
-        className="h-[(min(100dvh, 100vh))] 
-      w-[100vw]"
-        style={
-          {
-            "--sidebar-width": "280px",
-          } as React.CSSProperties
-        }
+        className="h-screen w-full"
+        style={{
+          "--sidebar-width": "280px",
+        } as React.CSSProperties}
       >
         <AppSidebar />
-        <main className="w-full flex-1">{children}</main>
+        <main className="w-full flex-1 overflow-auto">{children}</main>
       </SidebarProvider>
-
-      <SignInModal />
-      <UpgradeModal />
-    </>
+    </div>
   );
 }

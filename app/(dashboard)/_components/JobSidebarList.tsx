@@ -8,21 +8,58 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
-import { useQuery } from "convex/react";
 import { MessageSquareTextIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+// Define the Job type
+type Job = {
+  id: string;
+  jobTitle: string;
+  userId: string;
+  createdAt: number;
+};
 
 const JobSidebarList = (props: { userId: string }) => {
   const pathname = usePathname();
-  const jobs = useQuery(api.job.getAllJobs, {
-    userId: props.userId,
-  });
+  const [jobs, setJobs] = useState<Job[] | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (jobs === undefined) {
+  useEffect(() => {
+    // Function to get jobs from localStorage
+    const getJobs = () => {
+      try {
+        if (typeof window !== 'undefined') {
+          const storedJobs = localStorage.getItem('jobs');
+          if (storedJobs) {
+            const parsedJobs = JSON.parse(storedJobs);
+            // Filter jobs by userId
+            const userJobs = parsedJobs.filter((job: Job) => job.userId === props.userId);
+            setJobs(userJobs);
+          } else {
+            setJobs([]);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading jobs:', error);
+        setJobs([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getJobs();
+
+    // Listen for storage events to update the jobs list in real-time
+    const handleStorageChange = () => getJobs();
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [props.userId]);
+
+  if (isLoading || jobs === undefined) {
     return (
       <div className="w-full flex flex-col gap-3 px-2">
         <Skeleton className="h-[20px] w-full bg-gray-600" />
@@ -46,9 +83,9 @@ const JobSidebarList = (props: { userId: string }) => {
               "
         >
           {jobs?.map((item) => {
-            const jobPageUrl = `/job/${item._id}`;
+            const jobPageUrl = `/job/${item.id}`;
             return (
-              <SidebarMenuItem key={item._id}>
+              <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton
                   className={cn(
                     `

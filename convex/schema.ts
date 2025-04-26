@@ -1,7 +1,6 @@
 import {
   JobInsightStatus,
   JobStatus,
-  PaymentStatus,
   Role,
 } from "@/lib/constants";
 import { defineSchema, defineTable } from "convex/server";
@@ -40,26 +39,4 @@ export default defineSchema({
   })
     .index("by_job", ["jobId"])
     .index("by_user", ["userId"]),
-
-  apiLimits: defineTable({
-    userId: v.string(),
-    credits: v.number(),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  }).index("by_user", ["userId"]),
-
-  payments: defineTable({
-    userId: v.string(),
-    paypalOrderId: v.optional(v.string()),
-    transactionId: v.optional(v.string()),
-    amount: v.number(),
-    credits: v.number(),
-    status: v.union(
-      v.literal(PaymentStatus.PENDING),
-      v.literal(PaymentStatus.COMPLETED),
-      v.literal(PaymentStatus.FAILED)
-    ),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  }).index("by_user", ["userId"]),
 });

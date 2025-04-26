@@ -1,13 +1,12 @@
-"use server";
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.GEMINI_API_KEY!;
+const apiKey = "AIzaSyD1hahTBc7VeuFbCQmUDPXl46IHJLkDIh8";
 
 export const genAI = new GoogleGenAI({
   apiKey: apiKey,
 });
 
-export const model = "gemini-2.5-flash-preview-04-17";
+export const model = "gemini-2.0-flash";
 
 export const chatSession = genAI.chats.create({
   model: model,

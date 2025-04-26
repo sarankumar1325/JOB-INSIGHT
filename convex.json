@@ -1,0 +1,8 @@
+{
+  "externals": {
+    "@/lib/constants": "lib/constants.js",
+    "@/lib/gemini-ai": "lib/gemini-ai.js",
+    "@/lib/prompt": "lib/prompt.js",
+    "@/lib/job-process": "lib/job-process.js"
+  }
+}

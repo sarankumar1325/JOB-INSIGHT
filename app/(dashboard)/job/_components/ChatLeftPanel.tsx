@@ -1,16 +1,13 @@
 "use client";
-import ChatComponent from "@/components/ChatComponent";
+import SupabaseChat from "@/components/ChatComponent/SupabaseChat";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { useUser } from "@clerk/nextjs";
 import React from "react";
+import { useSupabase } from "@/components/SupabaseProvider";
 
 const ChatLeftPanel = (props: { jobId: string }) => {
   const { jobId } = props;
-  const { user } = useUser();
   const { open, isMobile } = useSidebar();
-
-  const userId = user?.id || null;
-  const userName = user?.firstName || null;
+  const { user } = useSupabase();
 
   return (
     <div className="w-full h-screen flex flex-col">
@@ -25,13 +22,7 @@ const ChatLeftPanel = (props: { jobId: string }) => {
         </div>
       </div>
       <div className="flex-1 overflow-hidden">
-        <ChatComponent
-          {...{
-            jobId,
-            userId,
-            userName,
-          }}
-        />
+        <SupabaseChat jobId={jobId} />
       </div>
     </div>
   );

@@ -6,7 +6,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Loader, LogOutIcon, Sparkles } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Loader, LogOutIcon } from "lucide-react";
 import React from "react";
 
 interface SidebarFooterContentProps {
@@ -15,21 +16,14 @@ interface SidebarFooterContentProps {
   userName: string;
   userInitial: string;
   emailAddress: string;
-  credits: number;
-  loadingCredit: boolean;
-  onUpgradeClick: () => void;
-  onSignOut: () => void;
 }
+
 const SidebarFooterContent = ({
   isSignedIn,
   isLoaded,
   userName,
   emailAddress,
   userInitial,
-  credits,
-  loadingCredit,
-  onUpgradeClick,
-  onSignOut,
 }: SidebarFooterContentProps) => {
   if (!isLoaded) {
     return (
@@ -40,31 +34,6 @@ const SidebarFooterContent = ({
   }
   return (
     <div className="flex flex-col gap-3">
-      {isSignedIn && (
-        <div
-          className="bg-gradient-to-r from-purple-600 
-        to-primary rounded-lg p-4"
-        >
-          <h3 className="text-white font-semibold text-sm mb-1">
-            {loadingCredit ? (
-              <Loader />
-            ) : (
-              `Credits Balance: ${credits?.toFixed(1)}`
-            )}
-          </h3>
-          <p className="text-white/80 text-xs mb-2">Ulock premium features</p>
-          <Button
-            onClick={onUpgradeClick}
-            className="w-full bg-white text-primary
-                      font-semibold hover:bg-white/90 text-sm
-                      "
-          >
-            <Sparkles />
-            Buy Credits
-          </Button>
-        </div>
-      )}
-
       {isSignedIn && (
         <Popover>
           <PopoverTrigger asChild>
@@ -106,20 +75,15 @@ const SidebarFooterContent = ({
               >
                 Account
               </h4>
-
-              <Button
-                variant="ghost"
-                onClick={onSignOut}
-                className="w-full justify-start text-sm
-                 !pl-1 !ring-0"
-              >
-                <LogOutIcon className="w-4 h-4" />
-                Sign Out
-              </Button>
             </div>
           </PopoverContent>
         </Popover>
       )}
+      
+      <div className="flex items-center justify-between px-3 pt-2 pb-4">
+        <span className="text-xs text-gray-400">Theme</span>
+        <ThemeToggle />
+      </div>
     </div>
   );
 };

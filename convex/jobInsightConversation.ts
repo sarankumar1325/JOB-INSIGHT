@@ -1,6 +1,5 @@
 import { ConvexError, v } from "convex/values";
 import { internalAction, mutation, query } from "./_generated/server";
-import { CREDIT_COST } from "@/lib/api-limits";
 import { Id } from "./_generated/dataModel";
 import { JobInsightStatus, Role } from "@/lib/constants";
 import { api, internal } from "./_generated/api";
@@ -41,22 +40,8 @@ export const sendUserMessage = mutation({
     message: v.string(),
   },
   handler: async (ctx, args) => {
-    const apiLimits = await ctx.db
-      .query("apiLimits")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .unique();
-
-    if (!apiLimits || apiLimits.credits < CREDIT_COST.JOB_CHAT_MESSAGE) {
-      throw new ConvexError({
-        type: "INSUFFICIENT_CREDITS",
-        message: "You have run out of credits",
-        required: CREDIT_COST.JOB_CHAT_MESSAGE,
-        available: apiLimits?.credits ?? 0,
-      });
-    }
-
     const job = await ctx.db.get(args.jobId as Id<"jobs">);
-    if (!job) throw new ConvexError("Job nod found");
+    if (!job) throw new ConvexError("Job not found");
 
     const conversationId = await ctx.db.insert("jobInsightConversations", {
       userId: args.userId,
@@ -165,12 +150,7 @@ export const generateAIJobInsightResponse = internalAction({
       text: fullResponse,
       status: JobInsightStatus.COMPLETED,
     });
-
-    // Deduct credit after successful job creation
-    await ctx.runMutation(api.apiLimit.deductCredit, {
-      userId: args.userId,
-      credit: CREDIT_COST.JOB_CHAT_MESSAGE,
-    });
+    
     return;
   },
 });
